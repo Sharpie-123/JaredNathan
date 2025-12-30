@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The 6AM Christmas Build</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #0f172a; color: white; font-family: 'Inter', sans-serif; }
+        .glow { box-shadow: 0 0 20px rgba(56, 189, 248, 0.5); }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-6">
+
+    <header class="text-center mb-12">
+        <h1 class="text-5xl font-extrabold mb-2 bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
+            Late Night Build Ops
+        </h1>
+        <p class="text-slate-400 italic">"Time is a social construct at 6:00 AM."</p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl w-full">
+        
+        <div class="glass p-6 rounded-2xl border border-slate-700 hover:border-blue-500 transition-all cursor-pointer group">
+            <h3 class="text-xl font-bold mb-2 group-hover:text-blue-400">🖼️ AI Prompt Arena</h3>
+            <p class="text-sm text-slate-400">Build a side-by-side voting app where two prompts battle it out. Use Gemini to judge the winner.</p>
+        </div>
+
+        <div class="glass p-6 rounded-2xl border border-slate-700 hover:border-emerald-500 transition-all cursor-pointer group">
+            <h3 class="text-xl font-bold mb-2 group-hover:text-emerald-400">⏳ The Chaos Clock</h3>
+            <p class="text-sm text-slate-400">A clock that shows "Christmas Break Time" (e.g., '3rd Breakfast' or 'Eternal Midnight').</p>
+        </div>
+
+        <div class="glass p-6 rounded-2xl border border-slate-700 hover:border-purple-500 transition-all cursor-pointer group">
+            <h3 class="text-xl font-bold mb-2 group-hover:text-purple-400">🔊 Shared Soundboard</h3>
+            <p class="text-sm text-slate-400">Create a socket-based board where when you click a button, the sound plays on your friend's laptop.</p>
+        </div>
+
+        <div class="glass p-6 rounded-2xl border border-slate-700 hover:border-red-500 transition-all cursor-pointer group">
+            <h3 class="text-xl font-bold mb-2 group-hover:text-red-400">👻 Ghost in the Repo</h3>
+            <p class="text-sm text-slate-400">A terminal-style chat that talks back using a creepy AI persona you both design.</p>
+        </div>
+
+    </div>
+
+    <button onclick="revealSecret()" class="mt-12 px-6 py-2 bg-slate-800 rounded-full text-xs text-slate-500 hover:text-white transition-colors">
+        ?? [REDACTED] ??
+    </button>
+
+    <script>
+        function revealSecret() {
+            alert("Status: 2 Devs. 0 Sleep. 1 Repo. \n\nNext Step: Ask Gemini to 'Write the CSS for a matrix-style falling snow effect' to add to this page.");
+        }
+    </script>
+</body>
+</html>
