@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#191714">
-<title>Swap — Jared × Nathan</title>
+<meta name="theme-color" content="#fcfbf9">
+<title>Swap</title>
 <style>
   :root{
-    --ink:#191714;      /* background: a dim room, not soot */
-    --paper:#e9e5dd;    /* text, and the read part of a shelf */
-    --dim:#8f887c;      /* labels, metadata */
-    --rule:#2c2823;     /* hairlines, and the unread part of a shelf */
-    --ribbon:#e55440;   /* the only accent: bookmarks and the lead. 4.9:1 on ink */
+    --ground:#fcfbf9;   /* the sheet */
+    --ink:#1a1815;      /* text, and the read part of a shelf */
+    --dim:#736c63;      /* labels, metadata */
+    --rule:#e1dcd4;     /* hairlines, and the unread part of a shelf */
+    --ribbon:#c53a22;   /* the only accent: bookmarks and the lead */
 
     /* spines are narrow, so spine labels are condensed */
     --display:"Arial Narrow","Helvetica Neue Condensed","Liberation Sans Narrow",
@@ -22,13 +22,13 @@
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html{-webkit-text-size-adjust:100%}
   body{
-    margin:0;background:var(--ink);color:var(--paper);
+    margin:0;background:var(--ground);color:var(--ink);
     font-family:var(--body);font-size:14px;line-height:1.5;
     -webkit-font-smoothing:antialiased
   }
   main{
     max-width:760px;margin:0 auto;
-    padding:22px 24px calc(56px + env(safe-area-inset-bottom))
+    padding:22px 24px calc(48px + env(safe-area-inset-bottom))
   }
   button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
   :focus-visible{outline:2px solid var(--ribbon);outline-offset:3px}
@@ -38,51 +38,70 @@
     font-family:var(--display);font-size:11px;font-weight:700;
     letter-spacing:.16em;text-transform:uppercase;color:var(--dim)
   }
-  .num{font-family:var(--data);font-variant-numeric:tabular-nums}
+  .link{
+    font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--dim);white-space:nowrap;transition:color .15s
+  }
+  .link:hover{color:var(--ink)}
+  .link.warn{color:var(--ribbon)}
+
+  /* fields sit inline in running text, so they read as text until touched */
+  .field{
+    font:inherit;color:inherit;background:none;border:0;border-bottom:1px dotted var(--rule);
+    padding:0 1px 1px;border-radius:0;transition:border-color .15s
+  }
+  .field:hover{border-bottom-color:var(--dim)}
+  .field:focus{outline:0;border-bottom:1px solid var(--ribbon)}
+  .field::placeholder{color:var(--dim);opacity:1}
+  .field.num{font-family:var(--data);text-align:center}
 
   /* header -------------------------------------------------------------- */
   .top{
     display:flex;align-items:baseline;justify-content:space-between;gap:16px;
     padding-bottom:14px;border-bottom:1px solid var(--rule)
   }
-  .top .label{color:var(--paper)}
+  .top .label{color:var(--ink)}
   .top .label em{font-style:normal;color:var(--dim)}
-  .reset{font-family:var(--display);font-size:11px;font-weight:700;
-    letter-spacing:.16em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
-  .reset:hover{color:var(--paper)}
 
   /* the trade ----------------------------------------------------------- */
   .trade{display:grid;grid-template-columns:1fr 1fr;margin-top:34px}
   .side{display:flex;flex-direction:column;padding-right:30px}
   .side + .side{padding-right:0;padding-left:30px;border-left:1px solid var(--rule)}
 
-  .side .who{display:block;margin-bottom:5px}
-  .side .who.leading{color:var(--ribbon)}
-  .spine-title{
-    font-family:var(--display);font-size:27px;font-weight:700;line-height:1.02;
-    letter-spacing:.02em;text-transform:uppercase;margin:0 0 20px
+  /* The name is a field, but it should look like a name until you reach for it. */
+  .who{
+    font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--dim);margin-bottom:5px;
+    border-bottom-color:transparent
   }
+  .who:hover{border-bottom-color:var(--dim)}
+  .who.leading{color:var(--ribbon)}
+  .work-title{
+    font-family:var(--display);font-size:27px;font-weight:700;line-height:1.02;
+    letter-spacing:.02em;text-transform:uppercase;margin:0
+  }
+  .part{font-family:var(--data);font-size:11.5px;color:var(--dim);margin:5px 0 0}
+  .work-title + .shelf-view,.part + .shelf-view{margin-top:20px}
 
   /* the shelf elevation — the signature ---------------------------------- */
   .shelf-view{
     display:flex;align-items:flex-end;gap:2px;height:48px;
-    border-bottom:1px solid var(--paper);padding-bottom:0
+    border-bottom:1px solid var(--ink)
   }
-  .spine{display:block;flex:1 1 0;height:100%;background:var(--rule)}
-  .spine.read{background:var(--paper)}
-  .block{display:block;position:relative;height:100%;background:var(--rule)}
-  .block .read{display:block;height:100%;background:var(--paper)}
+  .seg{display:block;position:relative;height:100%;background:var(--rule)}
+  .seg .read{display:block;height:100%;background:var(--ink)}
   /* a bookmark sticking out of the top of the book */
   .mark{display:block;position:absolute;top:-9px;bottom:0;width:2px;background:var(--ribbon)}
   .shelf-view > .mark{position:relative;top:0;height:57px;flex:0 0 2px;align-self:flex-end}
 
   .readout{
     display:flex;align-items:baseline;justify-content:space-between;gap:10px;
-    margin-top:11px
+    margin-top:11px;flex-wrap:wrap
   }
   .place{font-family:var(--data);font-size:11px;letter-spacing:.04em;
-    text-transform:uppercase;color:var(--dim)}
-  .pct{font-family:var(--data);font-size:29px;letter-spacing:-.03em;line-height:1}
+    text-transform:uppercase;color:var(--dim);white-space:nowrap}
+  .pct{font-family:var(--data);font-size:29px;letter-spacing:-.03em;line-height:1;
+    margin-left:auto}
 
   .acts{display:flex;gap:8px;margin-top:20px}
   .act{
@@ -90,7 +109,7 @@
     text-transform:uppercase;border:1px solid var(--rule);padding:11px 13px;
     transition:border-color .15s,color .15s
   }
-  .act:hover:not(:disabled){border-color:var(--paper)}
+  .act:hover:not(:disabled){border-color:var(--ink)}
   .act.grow{flex:1}
   .act.step{flex:0 0 42px;text-align:center;padding-left:0;padding-right:0}
   .act:disabled{color:var(--rule);border-color:var(--rule);cursor:default}
@@ -106,9 +125,24 @@
     text-transform:uppercase;color:var(--ribbon)
   }
   .verdict .gap{font-family:var(--data);color:var(--ribbon)}
-  .another{font-family:var(--display);font-size:11px;font-weight:700;
-    letter-spacing:.16em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
-  .another:hover{color:var(--paper)}
+
+  /* new swap ------------------------------------------------------------ */
+  .compose{margin-top:34px;padding-top:20px;border-top:1px solid var(--ink)}
+  .compose-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
+  .compose-head .label{color:var(--ink)}
+  .picks{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:20px}
+  .pick .label{display:block;margin-bottom:9px}
+  .pick .field{display:block;width:100%;margin-bottom:11px;padding-bottom:3px}
+  .lengths{display:flex;align-items:baseline;gap:8px}
+  .lengths .field{flex:1;margin:0}
+  .unit{
+    font-family:var(--data);font-size:11px;color:var(--dim);
+    border:0;background:none;padding:0;cursor:pointer
+  }
+  .hint{font-family:var(--data);font-size:10.5px;color:var(--dim);margin:16px 0 0}
+  .compose-foot{display:flex;align-items:baseline;justify-content:space-between;
+    gap:20px;margin-top:20px}
+  .compose-foot .err{font-family:var(--data);font-size:11px;color:var(--ribbon);margin:0}
 
   /* shelves ------------------------------------------------------------- */
   .shelves{display:grid;grid-template-columns:1fr 1fr;margin-top:46px}
@@ -116,44 +150,55 @@
   .shelf + .shelf{padding-right:0;padding-left:30px;border-left:1px solid var(--rule)}
   .shelf-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
     padding-bottom:10px}
-  .shelf-head .label{color:var(--paper)}
+  .shelf-head .label{color:var(--ink)}
   .shelf-head .avg{font-family:var(--data);font-size:11px;color:var(--dim)}
 
   ul{list-style:none;margin:0;padding:0}
   li{border-top:1px solid var(--rule);padding:12px 0}
-  .line{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+  .line{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
   .title{font-size:14.5px;font-weight:500;letter-spacing:-.005em}
-  .meta{font-family:var(--data);font-size:11px;color:var(--dim);margin-top:3px}
+  .note{font-family:var(--data);font-size:11px;color:var(--dim);margin-top:3px}
+  .tail{display:flex;align-items:baseline;gap:11px;flex:none}
+  .drop{font-family:var(--data);font-size:12px;color:var(--rule);flex:none;
+    line-height:1;padding:0 1px;transition:color .15s}
+  .drop:hover{color:var(--dim)}
+  .drop.warn{font-family:var(--display);font-size:10px;font-weight:700;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--ribbon)}
 
-  /* Stars sit in reverse DOM order so hovering one can light the ones to its
-     left via the sibling combinator. */
   .stars{display:flex;flex-direction:row-reverse;gap:2px;flex:none;line-height:1}
   .stars button{font-size:13px;color:var(--rule);padding:1px;transition:color .12s}
-  .stars button.on{color:var(--paper)}
+  .stars button.on{color:var(--ink)}
   .stars button:hover,
   .stars button:hover ~ button{color:var(--dim)}
   .stars button.on:hover,
-  .stars button:hover ~ button.on{color:var(--paper)}
+  .stars button:hover ~ button.on{color:var(--ink)}
 
   .status{
     font-family:var(--data);font-size:11px;color:var(--dim);flex:none;
     border-bottom:1px dotted var(--rule);padding-bottom:1px;transition:color .15s
   }
-  .status:hover{color:var(--paper);border-bottom-color:var(--dim)}
-  .status.on{color:var(--paper)}
+  .status:hover{color:var(--ink);border-bottom-color:var(--dim)}
+  .status.on{color:var(--ink)}
 
-  footer{margin-top:52px;padding-top:14px;border-top:1px solid var(--rule)}
+  .add{border-top:1px solid var(--rule);padding-top:12px}
+  .add .field{width:100%;font-size:14px;padding-bottom:3px}
+
+  footer{display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+    margin-top:52px;padding-top:14px;border-top:1px solid var(--rule)}
   footer p{margin:0;font-family:var(--data);font-size:11px;color:var(--dim)}
+  footer .link{font-size:10px}
+  .io{display:flex;gap:18px}
 
   @media (max-width:640px){
-    main{padding:18px 20px 44px}
-    .trade,.shelves{grid-template-columns:1fr}
+    main{padding:18px 20px 40px}
+    .trade,.shelves,.picks{grid-template-columns:1fr}
+    .picks{gap:30px}
     .side{padding-right:0}
     .side + .side{padding-left:0;border-left:0;border-top:1px solid var(--rule);
       margin-top:30px;padding-top:30px}
     .shelf{padding-right:0}
     .shelf + .shelf{padding-left:0;border-left:0;margin-top:38px}
-    .spine-title{font-size:31px}
+    .work-title{font-size:31px}
     .pct{font-size:33px}
     .verdict{flex-direction:column;align-items:flex-end;gap:10px}
     .verdict p{align-self:stretch}
@@ -165,158 +210,201 @@
 <main>
 
   <div class="top">
-    <span class="label">Swap №1 <em>· Jared × Nathan</em></span>
-    <button class="reset" id="reset">Reset</button>
+    <span class="label" id="crumb"></span>
+    <button class="link" id="newSwap">New swap</button>
   </div>
 
-  <section class="trade" id="trade" aria-label="The trade"></section>
+  <section class="trade" id="trade" aria-label="Current swap"></section>
 
   <div class="verdict">
     <p id="talk"></p>
-    <button class="another" id="another">Another</button>
+    <button class="link" id="another">Another</button>
   </div>
+
+  <div id="compose"></div>
 
   <section class="shelves" id="shelves" aria-label="Shelves"></section>
 
-  <footer><p>Demo. Nothing leaves this browser.</p></footer>
+  <footer>
+    <p>Saved on this device.</p>
+    <span class="io">
+      <button class="link" id="export">Export</button>
+      <button class="link" id="import">Import</button>
+    </span>
+  </footer>
 
+  <input type="file" id="file" accept="application/json,.json" hidden>
 </main>
 
 <script>
-/* Real counts — the shelf drawing is only honest if these are. */
-const SERIES = {
-  vinland: { title: 'Vinland Saga', volumes: 27 },
-  redrising: { title: 'Red Rising', books: [
-    { title: 'Red Rising',   pages: 382 },
-    { title: 'Golden Son',   pages: 442 },
-    { title: 'Morning Star', pages: 518 }
-  ]}
-};
-const RR_TOTAL = SERIES.redrising.books.reduce((n, b) => n + b.pages, 0);
+/* ---------------------------------------------------------------------------
+   A work is a list of segments, each with a label and a size. A manga is 27
+   segments of size 1; a trilogy is 3 segments sized in pages. That one shape
+   draws both shelves and measures both readers.
+--------------------------------------------------------------------------- */
+const volumes = n => Array.from({ length: n }, (_, i) => ({ label: `Vol. ${i + 1}`, size: 1 }));
 
-function seed() {
+function initial() {
   return {
-    trade: {
-      jared:  { volume: 2 },        // Vinland Saga, vol 2 of 27
-      nathan: { book: 0, page: 47 } // Red Rising, book 1, p.47
-    },
+    swap: 1,
+    people: { a: { name: 'Jared' }, b: { name: 'Nathan' } },
     shelves: {
-      jared: [
-        { id:'j1', title:'Red Rising',   meta:'Red Rising #1', status:'finished', rating:4 },
-        { id:'j2', title:'Golden Son',   meta:'Red Rising #2', status:'finished', rating:5 },
-        { id:'j3', title:'Morning Star', meta:'Red Rising #3', status:'reading',  rating:0, page:210, pages:518 },
-        { id:'j4', title:'Vinland Saga', meta:"Nathan's pick", status:'reading',  rating:0, swap:true }
+      a: [
+        { id:'a1', title:'Red Rising',   note:'Red Rising #1', status:'finished', rating:4 },
+        { id:'a2', title:'Golden Son',   note:'Red Rising #2', status:'finished', rating:5 },
+        { id:'a3', title:'Morning Star', note:'Red Rising #3', status:'reading',  rating:0 },
+        { id:'a4', title:'Vinland Saga', note:"Nathan's pick", status:'reading',  rating:0 }
       ],
-      nathan: [
-        { id:'n1', title:'Vinland Saga', meta:'Vol. 1–27, complete', status:'finished', rating:5 },
-        { id:'n2', title:'Red Rising',   meta:"Jared's pick",        status:'reading',  rating:0, swap:true }
+      b: [
+        { id:'b1', title:'Vinland Saga', note:'Vol. 1–27',    status:'finished', rating:5 },
+        { id:'b2', title:'Red Rising',   note:"Jared's pick", status:'reading',  rating:0 }
       ]
+    },
+    trade: {
+      a: { bookId:'a4', title:'Vinland Saga', unit:'volume', segments:volumes(27), seg:2, pos:0 },
+      b: { bookId:'b2', title:'Red Rising',   unit:'page', seg:0, pos:47, segments:[
+             { label:'Red Rising', size:382 },
+             { label:'Golden Son', size:442 },
+             { label:'Morning Star', size:518 }
+           ] }
     },
     taunt: 0
   };
 }
 
-const KEY = 'swap-demo-v2';
+const KEY = 'swap.v3';
 let S = load();
+let composing = false;      // the new-swap form is open
+let dropping = null;        // a book awaiting a second tap to remove
 
+function valid(s) {
+  return s && s.people && s.shelves && s.shelves.a && s.shelves.b
+    && s.trade && s.trade.a && Array.isArray(s.trade.a.segments)
+    && s.trade.b && Array.isArray(s.trade.b.segments);
+}
 function load() {
   try {
-    const p = JSON.parse(localStorage.getItem(KEY));
-    return (p && p.trade && p.shelves && p.shelves.jared) ? p : seed();
-  } catch (e) { return seed(); }
+    const s = JSON.parse(localStorage.getItem(KEY));
+    return valid(s) ? s : initial();
+  } catch (e) { return initial(); }
 }
 function save() {
   try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* runs in memory */ }
 }
 
-/* Both sides are measured as percent of their own series, which is the only
-   way a volume count and a page count can sit next to each other. */
-const jaredPct = () => S.trade.jared.volume / SERIES.vinland.volumes * 100;
-function nathanPages() {
-  let n = S.trade.nathan.page;
-  for (let i = 0; i < S.trade.nathan.book; i++) n += SERIES.redrising.books[i].pages;
+const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
+const total = w => w.segments.reduce((n, s) => n + s.size, 0);
+function read(w) {                       // units completed so far
+  let n = w.pos;
+  for (let i = 0; i < w.seg; i++) n += w.segments[i].size;
   return n;
 }
-const nathanPct = () => nathanPages() / RR_TOTAL * 100;
+const share = w => read(w) / total(w) * 100;
+const done  = w => w.seg >= w.segments.length;
 const pct = n => (n > 0 && n < 10 ? n.toFixed(1) : Math.round(n)) + '%';
-const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
+const other = k => k === 'a' ? 'b' : 'a';
 
 /* ---- the shelf elevation ------------------------------------------------
-   Jared's series is drawn as 27 volume spines; Nathan's as 3 blocks sized to
-   their real page counts. Same width, same baseline, so the fills compare
-   directly — and the difference in shape is the point. */
-function drawSpines(read, total) {
-  let out = '';
-  for (let i = 1; i <= total; i++) {
-    if (i - 1 === read && read > 0) out += '<i class="mark"></i>';
-    out += `<i class="spine${i <= read ? ' read' : ''}"></i>`;
-  }
-  if (read >= total) out += '<i class="mark"></i>';
-  return out;
-}
-function drawBlocks(bookIdx, page) {
-  return SERIES.redrising.books.map((b, i) => {
-    const frac = i < bookIdx ? 1 : i > bookIdx ? 0 : page / b.pages;
-    const mark = i === bookIdx
-      ? `<i class="mark" style="left:calc(${frac * 100}% - 1px)"></i>` : '';
-    return `<i class="block" style="flex:${b.pages} 0 0">
+   Segments are drawn at their true relative sizes, so 27 even volumes and
+   three uneven books read as the different shapes they are. */
+function drawWork(w) {
+  const cells = w.segments.map((s, i) => {
+    const frac = i < w.seg ? 1 : i > w.seg ? 0 : (s.size ? w.pos / s.size : 0);
+    const mark = i === w.seg ? `<i class="mark" style="left:calc(${frac * 100}% - 1px)"></i>` : '';
+    return `<i class="seg" style="flex:${s.size} 0 0">
               <i class="read" style="width:${frac * 100}%"></i>${mark}
             </i>`;
-  }).join('');
+  });
+  if (done(w)) cells.push('<i class="mark"></i>');   // finished: bookmark at the end
+  return cells.join('');
 }
 
+/* ---- the trade ---------------------------------------------------------- */
 function renderTrade() {
-  const jp = jaredPct(), np = nathanPct();
-  /* Below the tie threshold the verdict says nobody leads, so nobody is marked. */
-  const tied = Math.abs(jp - np) < TIE;
-  const jLead = !tied && jp > np, nLead = !tied && np > jp;
-  const v = S.trade.jared.volume, VOLS = SERIES.vinland.volumes;
-  const { book, page } = S.trade.nathan;
-  const cur = SERIES.redrising.books[book];
-  const atEnd = page >= cur.pages;
-  const last = book === SERIES.redrising.books.length - 1;
-  const next = last ? null : SERIES.redrising.books[book + 1];
+  const A = S.trade.a, B = S.trade.b;
+  const sa = share(A), sb = share(B);
+  const tied = Math.abs(sa - sb) < TIE;   // below the threshold nobody is marked
 
-  document.getElementById('trade').innerHTML = `
+  document.getElementById('crumb').innerHTML =
+    `Swap №${S.swap} <em>· ${esc(S.people.a.name)} × ${esc(S.people.b.name)}</em>`;
+
+  document.getElementById('trade').innerHTML =
+    side('a', A, !tied && sa > sb, sa) + side('b', B, !tied && sb > sa, sb);
+}
+
+/* Size the name field to the name so it reads as text rather than as a rule
+   running across the column. Measured, not estimated — condensed caps and
+   letter-spacing make any character-count guess wrong. */
+function fitName(el) {
+  const cs = getComputedStyle(el);
+  const probe = document.createElement('span');
+  probe.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;top:-999px';
+  probe.style.fontFamily = cs.fontFamily;
+  probe.style.fontSize = cs.fontSize;
+  probe.style.fontWeight = cs.fontWeight;
+  probe.style.letterSpacing = cs.letterSpacing;
+  probe.style.textTransform = cs.textTransform;
+  probe.textContent = el.value || ' ';
+  document.body.appendChild(probe);
+  el.style.width = Math.ceil(probe.getBoundingClientRect().width) + 2 + 'px';
+  probe.remove();
+}
+const fitNames = () => document.querySelectorAll('.who').forEach(fitName);
+
+function side(k, w, leads, pctVal) {
+  const seg = w.segments[Math.min(w.seg, w.segments.length - 1)];
+  /* Name the part only when it says something the title does not. */
+  const partLine = w.unit === 'page' && w.segments.length > 1 && seg.label !== w.title
+    ? `<p class="part">${esc(seg.label)}</p>` : '';
+
+  /* Position is typed, not only stepped — you finish a session on page 213. */
+  const place = w.unit === 'volume'
+    ? `Vol. <input class="field num" data-k="${k}-seg" data-pos="${k}:seg"
+              inputmode="numeric" value="${w.seg}" size="${String(w.segments.length).length}"
+              aria-label="Volumes read"> of ${w.segments.length}`
+    : `Book <input class="field num" data-k="${k}-seg" data-pos="${k}:seg"
+              inputmode="numeric" value="${w.seg + 1}" size="${String(w.segments.length).length}"
+              aria-label="Book number"> of ${w.segments.length}
+       · p.<input class="field num" data-k="${k}-pos" data-pos="${k}:pos"
+              inputmode="numeric" value="${w.pos}" size="${String(seg.size).length}"
+              aria-label="Page"> of ${seg.size}`;
+
+  const atEnd = w.unit === 'page' && !done(w) && w.pos >= seg.size;
+  const next = w.segments[w.seg + 1];
+  let main;
+  if (done(w)) {
+    main = `<button class="act grow" disabled>Finished</button>`;
+  } else if (w.unit === 'volume') {
+    main = `<button class="act grow" data-act="${k}:fwd">Read a volume</button>`;
+  } else if (atEnd) {
+    main = `<button class="act grow" data-act="${k}:next">Start ${esc(next ? next.label : '')}</button>`;
+  } else {
+    main = `<button class="act grow" data-act="${k}:fwd">Read 25 pages</button>`;
+  }
+
+  return `
     <div class="side">
-      <span class="label who${jLead ? ' leading' : ''}">Jared</span>
-      <h2 class="spine-title">Vinland Saga</h2>
-      <div class="shelf-view">${drawSpines(v, VOLS)}</div>
+      <input class="who field${leads ? ' leading' : ''}" data-k="${k}-name" data-name="${k}"
+             value="${esc(S.people[k].name)}" aria-label="Name" autocomplete="off">
+      <h2 class="work-title">${esc(w.title)}</h2>
+      ${partLine}
+      <div class="shelf-view">${drawWork(w)}</div>
       <div class="readout">
-        <span class="place">Vol. ${v} of ${VOLS}</span>
-        <span class="pct">${pct(jp)}</span>
+        <span class="place">${place}</span>
+        <span class="pct">${pct(pctVal)}</span>
       </div>
       <div class="acts">
-        <button class="act grow" data-act="vol+" ${v >= VOLS ? 'disabled' : ''}>
-          ${v >= VOLS ? 'Series finished' : 'Read a volume'}
-        </button>
-        <button class="act step" data-act="vol-" ${v <= 0 ? 'disabled' : ''}
-                aria-label="Undo one volume">&minus;</button>
-      </div>
-    </div>
-
-    <div class="side">
-      <span class="label who${nLead ? ' leading' : ''}">Nathan</span>
-      <h2 class="spine-title">${cur.title}</h2>
-      <div class="shelf-view">${drawBlocks(book, page)}</div>
-      <div class="readout">
-        <span class="place">Book ${book + 1} of 3 · p.${page}</span>
-        <span class="pct">${pct(np)}</span>
-      </div>
-      <div class="acts">
-        ${atEnd && next
-          ? `<button class="act grow" data-act="nextbook">Start ${next.title}</button>`
-          : `<button class="act grow" data-act="pg+" ${atEnd ? 'disabled' : ''}>
-               ${atEnd ? 'Trilogy finished' : 'Read 25 pages'}</button>`}
-        <button class="act step" data-act="pg-" ${page <= 0 && book === 0 ? 'disabled' : ''}
-                aria-label="Undo 25 pages">&minus;</button>
+        ${main}
+        <button class="act step" data-act="${k}:back" ${read(w) <= 0 ? 'disabled' : ''}
+                aria-label="Go back">&minus;</button>
       </div>
     </div>`;
 }
 
 /* ---- the voice ----------------------------------------------------------
-   Everything but the tie reads as a continuation of "<name> leads by N —",
-   so those lines start lowercase. */
+   Everything but the tie continues "<name> leads by N —", so those lines
+   start lowercase. */
 const TAUNTS = {
   blowout: [
     'this stopped being a race.',
@@ -339,120 +427,319 @@ const TAUNTS = {
     'A tie. Equally slow.'
   ]
 };
-const TIE = 0.5;   // points of series completion, below which it's a dead heat
+const TIE = 0.5;   // points of completion, below which it is a dead heat
 const bucket = g => g < TIE ? 'tied' : g < 6 ? 'close' : g < 20 ? 'clear' : 'blowout';
 
 function renderVerdict() {
-  const jp = jaredPct(), np = nathanPct();
-  const gap = Math.abs(jp - np), jLead = jp >= np;
-  const L = jLead ? 'Jared' : 'Nathan', T = jLead ? 'Nathan' : 'Jared';
+  const sa = share(S.trade.a), sb = share(S.trade.b);
+  const gap = Math.abs(sa - sb), aLeads = sa >= sb;
+  const L = S.people[aLeads ? 'a' : 'b'].name, T = S.people[aLeads ? 'b' : 'a'].name;
   const pool = TAUNTS[bucket(gap)];
-  const line = pool[S.taunt % pool.length].replace('{L}', L).replace('{T}', T);
-  const head = gap < TIE
-    ? ''
-    : `<span class="lead">${L} leads by</span> <span class="gap">${gap.toFixed(1)}</span> — `;
+  const line = esc(pool[S.taunt % pool.length].replace('{L}', L).replace('{T}', T));
+  const head = gap < TIE ? ''
+    : `<span class="lead">${esc(L)} leads by</span> <span class="gap">${gap.toFixed(1)}</span> — `;
   document.getElementById('talk').innerHTML = head + line;
 }
 
 /* ---- shelves ------------------------------------------------------------ */
 function renderShelves() {
-  document.getElementById('shelves').innerHTML = ['jared', 'nathan'].map(who => {
-    const list = S.shelves[who];
+  document.getElementById('shelves').innerHTML = ['a', 'b'].map(k => {
+    const list = S.shelves[k];
     const rated = list.filter(b => b.rating > 0);
     const avg = rated.length
       ? (rated.reduce((n, b) => n + b.rating, 0) / rated.length).toFixed(1) : '–';
 
     const rows = list.map(b => {
-      /* The two swap rows read their position off the trade, so the shelf and
+      /* The book in play reads its position off the trade, so the shelf and
          the card can never disagree. */
-      let title = b.title, meta = b.meta;
-      if (b.swap && who === 'jared') {
-        meta += ` · vol. ${S.trade.jared.volume} of ${SERIES.vinland.volumes}`;
-      } else if (b.swap && who === 'nathan') {
-        title = SERIES.redrising.books[S.trade.nathan.book].title;
-        meta += ` · book ${S.trade.nathan.book + 1}, p.${S.trade.nathan.page}`;
-      } else if (b.status === 'reading' && b.page) {
-        meta += ` · p.${b.page} of ${b.pages}`;
+      const w = S.trade[k].bookId === b.id ? S.trade[k] : null;
+      let note = b.note;
+      if (w) {
+        note += w.unit === 'volume'
+          ? ` · vol. ${w.seg} of ${w.segments.length}`
+          : ` · book ${Math.min(w.seg + 1, w.segments.length)}, p.${w.pos}`;
       }
       const stars = [5, 4, 3, 2, 1].map(n =>
-        `<button class="${n <= b.rating ? 'on' : ''}" data-rate="${who}:${b.id}:${n}"
+        `<button class="${n <= b.rating ? 'on' : ''}" data-rate="${k}:${b.id}:${n}"
            aria-label="Rate ${n} of 5">${n <= b.rating ? '★' : '☆'}</button>`).join('');
+      const drop = dropping === b.id
+        ? `<button class="drop warn" data-drop="${k}:${b.id}">Remove</button>`
+        : `<button class="drop" data-drop="${k}:${b.id}" aria-label="Remove ${esc(b.title)}">×</button>`;
       return `
         <li>
           <div class="line">
-            <span class="title">${title}</span>
+            <span class="title">${esc(b.title)}</span>
             <span class="stars">${stars}</span>
           </div>
           <div class="line">
-            <span class="meta">${meta}</span>
-            <button class="status${b.status === 'finished' ? ' on' : ''}"
-                    data-fin="${who}:${b.id}">${b.status}</button>
+            <span class="note">${esc(note)}</span>
+            <span class="tail">
+              <button class="status${b.status === 'finished' ? ' on' : ''}"
+                      data-fin="${k}:${b.id}">${b.status}</button>
+              ${drop}
+            </span>
           </div>
         </li>`;
     }).join('');
 
-    const name = who === 'jared' ? 'Jared' : 'Nathan';
     return `
       <div class="shelf">
         <div class="shelf-head">
-          <span class="label">${name}'s shelf</span>
+          <span class="label">${esc(S.people[k].name)}’s shelf</span>
           <span class="avg">avg ${avg}</span>
         </div>
         <ul>${rows}</ul>
+        <div class="add">
+          <input class="field" data-k="${k}-add" data-add="${k}"
+                 placeholder="Add a book" aria-label="Add a book to the shelf"
+                 autocomplete="off">
+        </div>
       </div>`;
   }).join('');
 }
 
-const render = () => { renderTrade(); renderVerdict(); renderShelves(); };
+/* ---- render, keeping the caret where it was ----------------------------- */
+function render() {
+  const was = document.activeElement;
+  const key = was && was.dataset ? was.dataset.k : null;
+  const caret = was && was.selectionStart;
 
-/* ---- actions ------------------------------------------------------------ */
-document.getElementById('trade').addEventListener('click', e => {
-  const btn = e.target.closest('[data-act]');
-  if (!btn || btn.disabled) return;
-  const t = S.trade, books = SERIES.redrising.books;
+  renderTrade(); renderVerdict(); renderShelves(); fitNames();
 
-  if (btn.dataset.act === 'vol+') t.jared.volume = clamp(t.jared.volume + 1, 0, SERIES.vinland.volumes);
-  if (btn.dataset.act === 'vol-') t.jared.volume = clamp(t.jared.volume - 1, 0, SERIES.vinland.volumes);
-  if (btn.dataset.act === 'pg+')  t.nathan.page = clamp(t.nathan.page + 25, 0, books[t.nathan.book].pages);
-  if (btn.dataset.act === 'pg-') {
-    if (t.nathan.page <= 0 && t.nathan.book > 0) {
-      t.nathan.book--;
-      t.nathan.page = books[t.nathan.book].pages;   // step back over the seam
-    } else {
-      t.nathan.page = clamp(t.nathan.page - 25, 0, books[t.nathan.book].pages);
+  if (key) {
+    const el = document.querySelector(`[data-k="${key}"]`);
+    if (el) {
+      el.focus();
+      try { el.setSelectionRange(caret, caret); } catch (e) { /* not a text field */ }
     }
   }
-  if (btn.dataset.act === 'nextbook' && t.nathan.book < books.length - 1) {
-    t.nathan.book++;
-    t.nathan.page = 0;
+}
+
+/* ---- reading -------------------------------------------------------------- */
+function step(k, how) {
+  const w = S.trade[k];
+  const cur = w.segments[Math.min(w.seg, w.segments.length - 1)];
+  if (how === 'fwd') {
+    if (w.unit === 'volume') w.seg = clamp(w.seg + 1, 0, w.segments.length);
+    else w.pos = clamp(w.pos + 25, 0, cur.size);
   }
+  if (how === 'next' && w.seg < w.segments.length - 1) { w.seg++; w.pos = 0; }
+  if (how === 'back') {
+    if (w.unit === 'volume') { w.seg = clamp(w.seg - 1, 0, w.segments.length); w.pos = 0; }
+    else if (w.pos <= 0 && w.seg > 0) {          // step back over the seam
+      w.seg--; w.pos = w.segments[w.seg].size;
+    } else w.pos = clamp(w.pos - 25, 0, cur.size);
+  }
+  if (w.seg >= w.segments.length) w.pos = 0;
+  finishInPlace(k);
   save(); render();
+}
+
+/* Reaching the end of the work marks its shelf entry finished, and backing
+   off the end puts it back to reading. */
+function finishInPlace(k) {
+  const w = S.trade[k];
+  const b = S.shelves[k].find(x => x.id === w.bookId);
+  if (b) b.status = done(w) ? 'finished' : 'reading';
+}
+
+function setPos(k, which, raw) {
+  const w = S.trade[k];
+  const n = parseInt(String(raw).replace(/\D/g, ''), 10);
+  if (isNaN(n)) return;
+  if (which === 'seg') {
+    w.seg = w.unit === 'volume'
+      ? clamp(n, 0, w.segments.length)
+      : clamp(n - 1, 0, w.segments.length - 1);
+    if (w.unit === 'page') w.pos = clamp(w.pos, 0, w.segments[w.seg].size);
+    else w.pos = 0;
+  } else {
+    w.pos = clamp(n, 0, w.segments[Math.min(w.seg, w.segments.length - 1)].size);
+  }
+  finishInPlace(k);
+  save(); render();
+}
+
+/* ---- starting the next swap --------------------------------------------- */
+function parseSegments(unit, text) {
+  if (unit === 'volume') {
+    const n = parseInt(text, 10);
+    if (!n || n < 1 || n > 999) return null;
+    return volumes(n);
+  }
+  const parts = String(text).split(',').map(s => s.trim()).filter(Boolean);
+  if (!parts.length) return null;
+  const segs = [];
+  for (let i = 0; i < parts.length; i++) {
+    const m = parts[i].match(/^(.*?)\s*(\d+)$/);
+    if (!m) return null;
+    const size = parseInt(m[2], 10);
+    if (!size) return null;
+    segs.push({ label: m[1].trim() || `Book ${i + 1}`, size });
+  }
+  return segs;
+}
+
+function renderCompose() {
+  const box = document.getElementById('compose');
+  if (!composing) { box.innerHTML = ''; return; }
+  const pick = k => `
+    <div class="pick">
+      <span class="label">${esc(S.people[k].name)} reads</span>
+      <input class="field" id="t-${k}" placeholder="Title" autocomplete="off">
+      <span class="lengths">
+        <input class="field" id="l-${k}" placeholder="27" autocomplete="off"
+               aria-label="Length">
+        <select class="unit" id="u-${k}" aria-label="Measured in">
+          <option value="volume">volumes</option>
+          <option value="page">pages</option>
+        </select>
+      </span>
+    </div>`;
+  box.innerHTML = `
+    <section class="compose">
+      <div class="compose-head">
+        <span class="label">Swap №${S.swap + 1}</span>
+        <button class="link" data-close>Cancel</button>
+      </div>
+      <div class="picks">${pick('a')}${pick('b')}</div>
+      <p class="hint">Volumes take a count. Pages take one number per book,
+        comma separated — <em>Red Rising 382, Golden Son 442, Morning Star 518</em>.</p>
+      <div class="compose-foot">
+        <p class="err" id="err"></p>
+        <button class="link" data-start>Start swap №${S.swap + 1}</button>
+      </div>
+    </section>`;
+  document.getElementById('t-a').focus();
+}
+
+function startSwap() {
+  const picks = {};
+  for (const k of ['a', 'b']) {
+    const title = document.getElementById('t-' + k).value.trim();
+    const unit = document.getElementById('u-' + k).value;
+    const segs = parseSegments(unit, document.getElementById('l-' + k).value);
+    if (!title) return fail(`${S.people[k].name} needs a title.`);
+    if (!segs) return fail(unit === 'volume'
+      ? `${S.people[k].name}’s volume count has to be a number.`
+      : `${S.people[k].name}’s page counts have to end in a number each.`);
+    picks[k] = { title, unit, segments: segs };
+  }
+  /* The book in play stays on the shelf with whatever it earned; the new pick
+     joins as a fresh entry. The shelf is the record of every swap. */
+  for (const k of ['a', 'b']) {
+    finishInPlace(k);
+    const id = k + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    S.shelves[k].push({
+      id, title: picks[k].title,
+      note: `${S.people[other(k)].name}’s pick`,
+      status: 'reading', rating: 0
+    });
+    S.trade[k] = { bookId: id, ...picks[k], seg: 0, pos: 0 };
+  }
+  S.swap++;
+  composing = false;
+  save(); renderCompose(); render();
+}
+const fail = msg => { document.getElementById('err').textContent = msg; };
+
+/* ---- events -------------------------------------------------------------- */
+const trade = document.getElementById('trade');
+trade.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]');
+  if (b && !b.disabled) { const [k, how] = b.dataset.act.split(':'); step(k, how); }
+});
+trade.addEventListener('input', e => {
+  const f = e.target;
+  if (f.dataset.pos) { const [k, which] = f.dataset.pos.split(':'); setPos(k, which, f.value); }
+  else if (f.dataset.name) { S.people[f.dataset.name].name = f.value; fitName(f); }
+});
+trade.addEventListener('change', e => {
+  if (e.target.dataset.name) {
+    const p = S.people[e.target.dataset.name];
+    p.name = e.target.value.trim() || 'Someone';
+    save(); render();
+  }
 });
 
-document.getElementById('shelves').addEventListener('click', e => {
+const shelves = document.getElementById('shelves');
+shelves.addEventListener('click', e => {
   const star = e.target.closest('[data-rate]');
   if (star) {
-    const [who, id, n] = star.dataset.rate.split(':');
-    const b = S.shelves[who].find(x => x.id === id);
-    b.rating = b.rating === +n ? 0 : +n;   // tap the same star to clear
-    save(); render();
-    return;
+    const [k, id, n] = star.dataset.rate.split(':');
+    const b = S.shelves[k].find(x => x.id === id);
+    b.rating = b.rating === +n ? 0 : +n;      // tap the same star to clear
+    dropping = null; save(); render(); return;
   }
   const fin = e.target.closest('[data-fin]');
   if (fin) {
-    const [who, id] = fin.dataset.fin.split(':');
-    const b = S.shelves[who].find(x => x.id === id);
+    const [k, id] = fin.dataset.fin.split(':');
+    const b = S.shelves[k].find(x => x.id === id);
     b.status = b.status === 'finished' ? 'reading' : 'finished';
-    save(); render();
+    dropping = null; save(); render(); return;
   }
+  const drop = e.target.closest('[data-drop]');
+  if (drop) {
+    const [k, id] = drop.dataset.drop.split(':');
+    if (dropping !== id) { dropping = id; render(); return; }   // ask once
+    S.shelves[k] = S.shelves[k].filter(x => x.id !== id);
+    if (S.trade[k].bookId === id) S.trade[k].bookId = null;     // it left the shelf
+    dropping = null; save(); render();
+  }
+});
+shelves.addEventListener('keydown', e => {
+  const f = e.target;
+  if (f.dataset.add && e.key === 'Enter') {
+    const title = f.value.trim();
+    if (!title) return;
+    S.shelves[f.dataset.add].push({
+      id: f.dataset.add + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      title, note: 'Added by hand', status: 'reading', rating: 0
+    });
+    f.value = ''; save(); render();
+  }
+});
+document.addEventListener('click', e => {
+  if (dropping && !e.target.closest('[data-drop]')) { dropping = null; render(); }
 });
 
 document.getElementById('another').addEventListener('click', () => {
-  S.taunt = (S.taunt + 1) % 3;
-  save(); renderVerdict();
+  S.taunt = (S.taunt + 1) % 3; save(); renderVerdict();
 });
-document.getElementById('reset').addEventListener('click', () => {
-  S = seed(); save(); render();
+document.getElementById('newSwap').addEventListener('click', () => {
+  composing = !composing; renderCompose();
+});
+document.getElementById('compose').addEventListener('click', e => {
+  if (e.target.closest('[data-close]')) { composing = false; renderCompose(); }
+  if (e.target.closest('[data-start]')) startSwap();
+});
+
+/* ---- taking the data with you -------------------------------------------- */
+document.getElementById('export').addEventListener('click', () => {
+  const url = URL.createObjectURL(
+    new Blob([JSON.stringify(S, null, 2)], { type: 'application/json' }));
+  const a = document.createElement('a');
+  a.href = url; a.download = `swap-${S.swap}.json`; a.click();
+  URL.revokeObjectURL(url);
+});
+const file = document.getElementById('file');
+document.getElementById('import').addEventListener('click', () => file.click());
+file.addEventListener('change', () => {
+  const f = file.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    let next;
+    try { next = JSON.parse(r.result); } catch (e) { next = null; }
+    if (!valid(next)) {           // a bad file must never cost you the good data
+      document.querySelector('footer p').textContent = 'That file is not a swap export.';
+      return;
+    }
+    S = next; save(); renderCompose(); render();
+    document.querySelector('footer p').textContent = 'Saved on this device.';
+  };
+  r.readAsText(f);
+  file.value = '';
 });
 
 render();
